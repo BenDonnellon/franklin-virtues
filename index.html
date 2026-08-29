@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franklin's 13 Virtues Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        skybg: '#F0F9FF', // Soft light sky blue background
+                        skydark: '#0369A1', // Deep sky blue accent
+                        darktext: '#0F172A'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-skybg text-darktext font-sans min-h-screen flex flex-col antialiased selection:bg-sky-200">
+
+    <header class="py-6 px-8 max-w-5xl mx-auto w-full flex justify-between items-center border-b border-sky-200/60 mb-8">
+        <div>
+            <h1 class="text-xl font-medium tracking-tight text-skydark">Benjamin Franklin's 13 Virtues</h1>
+            <p class="text-xs text-sky-900/60">Weekly Self-Improvement System</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <span id="currentActiveBadge" class="text-xs font-medium text-skydark bg-white px-3.5 py-1.5 rounded-full shadow-sm border border-sky-100">
+                Active Week: Temperance
+            </span>
+            <button onclick="switchTab('tracker')" id="btnTracker" class="text-xs text-skydark font-semibold transition bg-white px-3.5 py-1.5 rounded-full shadow-sm border border-sky-200">Tracker</button>
+            <button onclick="switchTab('overview')" id="btnOverview" class="text-xs text-sky-700 hover:text-skydark font-medium transition px-2 py-1">Progress Overview</button>
+            <button onclick="openMasterList()" class="text-xs text-sky-700 hover:text-skydark font-medium transition underline underline-offset-4">View All 13</button>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto w-full px-6 pb-12 flex-grow">
+        
+        <div id="viewTracker" class="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <section class="md:col-span-7 space-y-8">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-baseline">
+                        <span id="weekNumberLabel" class="text-xs font-semibold uppercase tracking-widest text-sky-700">Week 1 of 13 Focus</span>
+                        <span class="text-[11px] text-sky-800/50">1 Virtue / 1 Week</span>
+                    </div>
+                    <h2 id="activeVirtueTitle" class="text-3xl font-semibold tracking-tight text-darktext">Temperance</h2>
+                    
+                    <p id="activeVirtuePrecept" class="text-base font-serif italic text-sky-900/90">
+                        "Eat not to dullness; drink not to elevation."
+                    </p>
+
+                    <div class="pt-2 space-y-2">
+                        <h3 class="text-xs font-semibold uppercase tracking-wider text-skydark">Deep Dive & Things to Consider</h3>
+                        <div id="activeVirtueExpansion" class="text-xs text-sky-900/80 leading-relaxed space-y-2">
+                            </div>
+                    </div>
+                </div>
+
+                <hr class="border-sky-200/60">
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-semibold uppercase tracking-wider text-skydark">Recorded Entries</h2>
+                        <span id="logCount" class="text-xs text-sky-900/50">0 entries recorded</span>
+                    </div>
+                    <div id="logsContainer" class="space-y-3">
+                        <div id="emptyState" class="py-8 text-sky-900/40 text-xs italic">
+                            No entries logged yet for this week. Use the logger on the right to add a win or fault.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="md:col-span-5 space-y-8">
+                <div class="space-y-4 bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h2 id="calendarMonthYear" class="text-xs font-semibold uppercase tracking-wider text-skydark">August 2026</h2>
+                        <div class="flex gap-2">
+                            <button onclick="changeMonth(-1)" class="p-1 hover:bg-sky-100 rounded text-sky-800 text-xs transition">&larr;</button>
+                            <button onclick="changeMonth(1)" class="p-1 hover:bg-sky-100 rounded text-sky-800 text-xs transition">&rarr;</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 text-center text-[10px] font-medium text-sky-900/40">
+                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                    </div>
+                    
+                    <div id="miniCalendarGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
+                        </div>
+                    <p class="text-[10px] text-sky-900/50 text-center italic pt-1">Click any date to view or jump to its logs.</p>
+                </div>
+
+                <div class="space-y-4 bg-white/60 p-6 rounded-2xl border border-sky-100 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-semibold uppercase tracking-wider text-skydark">Log Entry</h2>
+                        <span id="selectedDateLabel" class="text-[11px] font-medium text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-100">Today</span>
+                    </div>
+                    <form id="logForm" class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] font-medium text-sky-900/70 mb-1">Entry Type</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" id="typeWin" onclick="setEntryType('win')" class="py-2 rounded-xl text-xs font-medium border border-sky-200 transition bg-emerald-50 text-emerald-700 border-emerald-300">Win / Success</button>
+                                <button type="button" id="typeFault" onclick="setEntryType('fault')" class="py-2 rounded-xl text-xs font-medium border border-sky-200 transition bg-white text-sky-900/60">Fault / Slip</button>
+                            </div>
+                        </div>
+                        <div id="countContainer">
+                            <label id="countLabel" class="block text-[11px] font-medium text-sky-900/70 mb-1">Count</label>
+                            <input type="number" id="entryCount" min="1" value="1" required class="w-full bg-white border border-sky-200/80 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-skydark transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-sky-900/70 mb-1">Reflection / Notes</label>
+                            <textarea id="reflectionNotes" rows="2" placeholder="Describe your success or where you slipped..." class="w-full bg-white border border-sky-200/80 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-skydark transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-skydark text-white py-2.5 rounded-xl text-xs font-medium hover:bg-sky-700 transition shadow-sm">Save Entry</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <div id="viewOverview" class="space-y-8 hidden">
+            <div>
+                <h2 class="text-2xl font-semibold tracking-tight text-darktext">Progress Overview</h2>
+                <p class="text-xs text-sky-900/60 mt-1">Review your wins, faults, and scoring across all 13 virtues over weeks and months.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm space-y-1">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Total Wins Logged</span>
+                    <p id="statTotalWins" class="text-3xl font-bold text-darktext">0</p>
+                </div>
+                <div class="bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm space-y-1">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-rose-600">Total Faults Logged</span>
+                    <p id="statTotalFaults" class="text-3xl font-bold text-darktext">0</p>
+                </div>
+                <div class="bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm space-y-1">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-skydark">Overall Success Ratio</span>
+                    <p id="statRatio" class="text-3xl font-bold text-darktext">0%</p>
+                </div>
+            </div>
+
+            <div class="bg-white/60 p-6 rounded-2xl border border-sky-100 shadow-sm space-y-4">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-skydark">Virtues Performance Matrix</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="border-b border-sky-100 text-sky-900/50 uppercase text-[10px]">
+                                <th class="pb-3 font-semibold">Virtue</th>
+                                <th class="pb-3 font-semibold">Wins</th>
+                                <th class="pb-3 font-semibold">Faults</th>
+                                <th class="pb-3 font-semibold">Net Score</th>
+                                <th class="pb-3 font-semibold">Progress Bar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overviewTableBody" class="divide-y divide-sky-50">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="masterModal" class="fixed inset-0 bg-darktext/25 backdrop-blur-xs hidden justify-center items-center p-4 z-50">
+        <div class="bg-white max-w-2xl w-full p-8 rounded-2xl border border-sky-100 shadow-xl max-h-[85vh] overflow-y-auto space-y-6">
+            <div class="flex justify-between items-center border-b border-sky-100 pb-4">
+                <div>
+                    <h2 class="text-base font-semibold text-skydark">The 13 Virtues Master Rotation</h2>
+                    <p class="text-xs text-sky-900/60 mt-0.5">Click any virtue to instantly set it as your active weekly focus.</p>
+                </div>
+                <button onclick="closeMasterList()" class="text-xs text-sky-800 hover:text-darktext font-medium px-2 py-1">✕ Close</button>
+            </div>
+            <div id="virtuesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const virtues = [
+            { 
+                name: "Temperance", 
+                desc: "Eat not to dullness; drink not to elevation.", 
+                expansion: "Franklin noted that temperance first tended to secure coolness and clearness of head, making execution easier. For 'eat not to dullness', consider portion control, avoiding food comas, and eating for sustained mental energy rather than immediate gratification." 
+            },
+            { 
+                name: "Silence", 
+                desc: "Speak not but what may benefit others or yourself; avoid trifling conversation.", 
+                expansion: "Focus on listening more than speaking. Cut out gossip, small talk that drains energy, and unnecessary commentary. Let every word carry intentional value." 
+            },
+            { 
+                name: "Order", 
+                desc: "Let all your things have their places; let each part of your business have its time.", 
+                expansion: "Establish a daily routine or schedule. Keep your physical workspace and digital desktop organized so time isn't wasted searching for items." 
+            },
+            { 
+                name: "Resolution", 
+                desc: "Resolve to perform what you ought; perform without fail what you resolve.", 
+                expansion: "Commit fully to your daily tasks. Eliminate procrastination by breaking big intentions into concrete, non-negotiable actions." 
+            },
+            { 
+                name: "Frugality", 
+                desc: "Make no expense but to do good to others or yourself; i.e., waste nothing.", 
+                expansion: "Examine financial or resource waste. Focus on intentional spending and eliminating impulse purchases that do not add genuine value to your life." 
+            },
+            { 
+                name: "Industry", 
+                desc: "Lose no time; be always employ'd in something useful; cut off all unnecessary actions.", 
+                expansion: "Eliminate idle distractions, mindless scrolling, or tasks that lack purpose. Direct your energy completely toward productive, meaningful labor." 
+            },
+            { 
+                name: "Sincerity", 
+                desc: "Use no hurtful deceit; think innocently and justly, and, if you speak, speak accordingly.", 
+                expansion: "Be honest in your dealings, clear in your communication, and true to your word without manipulation or hidden motives." 
+            },
+            { 
+                name: "Justice", 
+                desc: "Wrong none by doing injuries, or omitting the benefits that are your duty.", 
+                expansion: "Ensure fairness in your interactions. Fulfill your obligations to colleagues, family, and community without shortcuts." 
+            },
+            { 
+                name: "Moderation", 
+                desc: "Avoid extremes; forbear resenting injuries so much as you think they deserve.", 
+                expansion: "Practice emotional balance. Step back from intense reactions, over-working, or swinging between emotional extremes." 
+            },
+            { 
+                name: "Cleanliness", 
+                desc: "Tolerate no uncleanliness in body, clothes, or habitation.", 
+                expansion: "Maintain personal hygiene, keep your living quarters tidy, and respect your physical environment as a reflection of mental clarity." 
+            },
+            { 
+                name: "Tranquility", 
+                desc: "Be not disturbed at trifles, or at accidents common or unavoidable.", 
+                expansion: "Cultivate inner peace. Let go of anxieties regarding things outside of your direct control, such as traffic, weather, or minor annoyances." 
+            },
+            { 
+                name: "Chastity", 
+                desc: "Rarely use venery but for health or offspring, never to dullness, weakness, or injury.", 
+                expansion: "Preserve your physical vitality and relational integrity with mindfulness and self-control." 
+            },
+            { 
+                name: "Humility", 
+                desc: "Imitate Jesus and Socrates.", 
+                expansion: "Practice intellectual modesty. Approach discussions with a willingness to learn rather than a need to prove yourself right." 
+            }
+        ];
+
+        let activeVirtueIndex = parseInt(localStorage.getItem('franklin_active_index')) || 0;
+        let logs = JSON.parse(localStorage.getItem('franklin_logs')) || [];
+
+        // Calendar & Date State
+        let todayObj = new Date();
+        let currentMonth = todayObj.getMonth();
+        let currentYear = todayObj.getFullYear();
+        let selectedDateString = new Date().toISOString().split('T')[0];
+
+        // Logger Type State ('win' or 'fault')
+        let currentEntryType = 'win';
+
+        const activeVirtueTitle = document.getElementById('activeVirtueTitle');
+        const activeVirtuePrecept = document.getElementById('activeVirtuePrecept');
+        const activeVirtueExpansion = document.getElementById('activeVirtueExpansion');
+        const weekNumberLabel = document.getElementById('weekNumberLabel');
+        const currentActiveBadge = document.getElementById('currentActiveBadge');
+        const logForm = document.getElementById('logForm');
+        const logsContainer = document.getElementById('logsContainer');
+        const emptyState = document.getElementById('emptyState');
+        const logCount = document.getElementById('logCount');
+        const masterModal = document.getElementById('masterModal');
+        const virtuesGrid = document.getElementById('virtuesGrid');
+        const selectedDateLabel = document.getElementById('selectedDateLabel');
+
+        // Tab switches
+        window.switchTab = function(tabName) {
+            const viewTracker = document.getElementById('viewTracker');
+            const viewOverview = document.getElementById('viewOverview');
+            const btnTracker = document.getElementById('btnTracker');
+            const btnOverview = document.getElementById('btnOverview');
+
+            if (tabName === 'tracker') {
+                viewTracker.classList.remove('hidden');
+                viewOverview.classList.add('hidden');
+                btnTracker.className = 'text-xs text-skydark font-semibold transition bg-white px-3.5 py-1.5 rounded-full shadow-sm border border-sky-200';
+                btnOverview.className = 'text-xs text-sky-700 hover:text-skydark font-medium transition px-2 py-1';
+            } else {
+                viewTracker.classList.add('hidden');
+                viewOverview.classList.remove('hidden');
+                btnOverview.className = 'text-xs text-skydark font-semibold transition bg-white px-3.5 py-1.5 rounded-full shadow-sm border border-sky-200';
+                btnTracker.className = 'text-xs text-sky-700 hover:text-skydark font-medium transition px-2 py-1';
+                renderOverviewData();
+            }
+        };
+
+        window.setEntryType = function(type) {
+            currentEntryType = type;
+            const btnWin = document.getElementById('typeWin');
+            const btnFault = document.getElementById('typeFault');
+            if (type === 'win') {
+                btnWin.className = 'py-2 rounded-xl text-xs font-medium border transition bg-emerald-50 text-emerald-700 border-emerald-300';
+                btnFault.className = 'py-2 rounded-xl text-xs font-medium border transition bg-white text-sky-900/60 border-sky-200';
+            } else {
+                btnFault.className = 'py-2 rounded-xl text-xs font-medium border transition bg-rose-50 text-rose-700 border-rose-300';
+                btnWin.className = 'py-2 rounded-xl text-xs font-medium border transition bg-white text-sky-900/60 border-sky-200';
+            }
+        };
+
+        function renderApp() {
+            const currentVirtue = virtues[activeVirtueIndex];
+            
+            currentActiveBadge.textContent = `Active Week: ${currentVirtue.name}`;
+            weekNumberLabel.textContent = `Week ${activeVirtueIndex + 1} of 13 Focus`;
+            activeVirtueTitle.textContent = currentVirtue.name;
+            activeVirtuePrecept.textContent = `"${currentVirtue.desc}"`;
+            activeVirtueExpansion.innerHTML = `<p>${currentVirtue.expansion}</p>`;
+
+            // Render Master List Modal
+            virtuesGrid.innerHTML = '';
+            virtues.forEach((v, index) => {
+                const isSelected = index === activeVirtueIndex;
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border text-left cursor-pointer transition ${isSelected ? 'bg-skydark text-white border-skydark shadow-sm' : 'bg-white text-darktext border-sky-100 hover:border-skydark'}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold ${isSelected ? 'text-sky-200' : 'text-sky-800'}">#${index + 1}</span>
+                        ${isSelected ? '<span class="text-[9px] bg-sky-600 px-2 py-0.5 rounded-full text-white font-medium">Active</span>' : ''}
+                    </div>
+                    <h4 class="font-medium text-sm">${v.name}</h4>
+                    <p class="text-[11px] ${isSelected ? 'text-sky-100' : 'text-sky-900/60'} line-clamp-1 mt-0.5">${v.desc}</p>
+                `;
+                card.addEventListener('click', () => {
+                    activeVirtueIndex = index;
+                    localStorage.setItem('franklin_active_index', activeVirtueIndex);
+                    closeMasterList();
+                    renderApp();
+                });
+                virtuesGrid.appendChild(card);
+            });
+
+            // Render weekly logs for current virtue
+            const currentVirtueLogs = logs.filter(l => l.virtueIndex === activeVirtueIndex);
+            logsContainer.innerHTML = '';
+
+            if (currentVirtueLogs.length === 0) {
+                logsContainer.appendChild(emptyState);
+                logCount.textContent = '0 entries recorded';
+            } else {
+                logCount.textContent = `${currentVirtueLogs.length} entr${currentVirtueLogs.length === 1 ? 'y' : 'ies'} recorded`;
+
+                currentVirtueLogs.sort((a, b) => new Date(b.dateStr) - new Date(a.dateStr)).forEach(log => {
+                    const isWin = log.type === 'win';
+                    const badgeClass = isWin ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-100';
+                    const labelText = isWin ? `Win: +${log.count}` : `Fault: ${log.count}`;
+
+                    const logCard = document.createElement('div');
+                    logCard.className = 'bg-white/80 p-4 rounded-xl border border-sky-100 flex justify-between items-start transition hover:border-sky-300';
+                    logCard.innerHTML = `
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-xs text-darktext">${log.dateStr}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded-md font-medium border ${badgeClass}">${labelText}</span>
+                            </div>
+                            <p class="text-xs text-sky-900/80">${log.reflectionNotes || 'No notes provided.'}</p>
+                        </div>
+                        <button onclick="deleteLog(${log.id})" class="text-sky-300 hover:text-red-500 text-xs font-medium transition">Delete</button>
+                    `;
+                    logsContainer.appendChild(logCard);
+                });
+            }
+
+            renderCalendar();
+            selectedDateLabel.textContent = selectedDateString;
+        }
+
+        function renderCalendar() {
+            const calendarMonthYear = document.getElementById('calendarMonthYear');
+            const miniCalendarGrid = document.getElementById('miniCalendarGrid');
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            calendarMonthYear.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            miniCalendarGrid.innerHTML = '';
+
+            const firstDayIndex = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7; 
+            const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                miniCalendarGrid.appendChild(document.createElement('div'));
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dayStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayCell = document.createElement('div');
+                
+                const hasLogs = logs.some(l => l.dateStr === dayStr);
+                const isSelected = dayStr === selectedDateString;
+
+                let baseClasses = 'py-1.5 rounded-lg text-[11px] font-medium transition cursor-pointer flex flex-col items-center justify-center border ';
+                if (isSelected) {
+                    baseClasses += 'bg-skydark text-white border-skydark font-bold shadow-sm';
+                } else if (hasLogs) {
+                    baseClasses += 'bg-sky-100 text-skydark border-sky-200';
+                } else {
+                    baseClasses += 'bg-white/60 text-sky-900 border-sky-100 hover:border-sky-300';
+                }
+
+                dayCell.className = baseClasses;
+                dayCell.innerHTML = `<span>${day}</span>`;
+                
+                dayCell.addEventListener('click', () => {
+                    selectedDateString = dayStr;
+                    renderApp();
+                });
+
+                miniCalendarGrid.appendChild(dayCell);
+            }
+        }
+
+        function renderOverviewData() {
+            let totalWins = 0;
+            let totalFaults = 0;
+
+            logs.forEach(l => {
+                if (l.type === 'win') totalWins += l.count;
+                else totalFaults += l.count;
+            });
+
+            document.getElementById('statTotalWins').textContent = totalWins;
+            document.getElementById('statTotalFaults').textContent = totalFaults;
+
+            const totalEntries = totalWins + totalFaults;
+            const ratio = totalEntries > 0 ? Math.round((totalWins / totalEntries) * 100) : 0;
+            document.getElementById('statRatio').textContent = `${ratio}%`;
+
+            const tbody = document.getElementById('overviewTableBody');
+            tbody.innerHTML = '';
+
+            virtues.forEach((v, index) => {
+                const vLogs = logs.filter(l => l.virtueIndex === index);
+                let vWins = 0;
+                let vFaults = 0;
+                vLogs.forEach(l => {
+                    if (l.type === 'win') vWins += l.count;
+                    else vFaults += l.count;
+                });
+
+                const net = vWins - vFaults;
+                const totalV = vWins + vFaults;
+                const percent = totalV > 0 ? Math.round((vWins / totalV) * 100) : 0;
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-sky-50/55 transition';
+                row.innerHTML = `
+                    <td class="py-3 font-medium text-darktext">#${index + 1} ${v.name}</td>
+                    <td class="py-3 text-emerald-600 font-semibold">+${vWins}</td>
+                    <td class="py-3 text-rose-600 font-semibold">${vFaults}</td>
+                    <td class="py-3 font-semibold ${net >= 0 ? 'text-skydark' : 'text-rose-600'}">${net >= 0 ? '+' + net : net}</td>
+                    <td class="py-3 pr-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-28 bg-sky-100 rounded-full h-2 overflow-hidden">
+                                <div class="bg-skydark h-2 rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                            </div>
+                            <span class="text-[10px] text-sky-900/60">${percent}%</span>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        window.changeMonth = function(direction) {
+            currentMonth += direction;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        window.openMasterList = function() {
+            masterModal.classList.remove('hidden');
+            masterModal.classList.add('flex');
+        }
+
+        window.closeMasterList = function() {
+            masterModal.classList.remove('flex');
+            masterModal.classList.add('hidden');
+        }
+
+        logForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newLog = {
+                id: Date.now(),
+                virtueIndex: activeVirtueIndex,
+                dateStr: selectedDateString,
+                type: currentEntryType,
+                count: parseInt(document.getElementById('entryCount').value) || 1,
+                reflectionNotes: document.getElementById('reflectionNotes').value.trim()
+            };
+
+            logs.unshift(newLog);
+            localStorage.setItem('franklin_logs', JSON.stringify(logs));
+
+            document.getElementById('entryCount').value = '1';
+            document.getElementById('reflectionNotes').value = '';
+
+            renderApp();
+        });
+
+        window.deleteLog = function(id) {
+            logs = logs.filter(l => l.id !== id);
+            localStorage.setItem('franklin_logs', JSON.stringify(logs));
+            renderApp();
+        };
+
+        // Initialize view
+        renderApp();
+    </script>
+</body>
+</html>
