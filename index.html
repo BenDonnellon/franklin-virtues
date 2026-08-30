@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Franklin's 13 Virtues Tracker</title>
+    <!-- Tailwind CSS for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JavaScript Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -21,10 +24,11 @@
 </head>
 <body class="bg-skybg text-darktext font-sans min-h-screen flex flex-col antialiased selection:bg-sky-200">
 
+    <!-- Header / Navigation -->
     <header class="py-6 px-8 max-w-5xl mx-auto w-full flex justify-between items-center border-b border-sky-200/60 mb-8">
         <div>
             <h1 class="text-xl font-medium tracking-tight text-skydark">Benjamin Franklin's 13 Virtues</h1>
-            <p class="text-xs text-sky-900/60">Weekly Self-Improvement System</p>
+            <p class="text-xs text-sky-900/60">Weekly Self-Improvement System (Cloud Synced)</p>
         </div>
         <div class="flex items-center gap-4">
             <span id="currentActiveBadge" class="text-xs font-medium text-skydark bg-white px-3.5 py-1.5 rounded-full shadow-sm border border-sky-100">
@@ -36,10 +40,14 @@
         </div>
     </header>
 
+    <!-- Main Content Container -->
     <main class="max-w-5xl mx-auto w-full px-6 pb-12 flex-grow">
         
+        <!-- TRACKER VIEW -->
         <div id="viewTracker" class="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <!-- Left Column: Virtue Landing & History Logs (7 Cols) -->
             <section class="md:col-span-7 space-y-8">
+                <!-- Hero Focus Section -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-baseline">
                         <span id="weekNumberLabel" class="text-xs font-semibold uppercase tracking-widest text-sky-700">Week 1 of 13 Focus</span>
@@ -51,15 +59,18 @@
                         "Eat not to dullness; drink not to elevation."
                     </p>
 
+                    <!-- Deep Dive / Expansion -->
                     <div class="pt-2 space-y-2">
                         <h3 class="text-xs font-semibold uppercase tracking-wider text-skydark">Deep Dive & Things to Consider</h3>
                         <div id="activeVirtueExpansion" class="text-xs text-sky-900/80 leading-relaxed space-y-2">
-                            </div>
+                            <!-- Dynamic expansion text -->
+                        </div>
                     </div>
                 </div>
 
                 <hr class="border-sky-200/60">
 
+                <!-- Progress History Section -->
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-semibold uppercase tracking-wider text-skydark">Recorded Entries</h2>
@@ -73,7 +84,9 @@
                 </div>
             </section>
 
+            <!-- Right Column: Interactive Calendar & Daily Logger (5 Cols) -->
             <section class="md:col-span-5 space-y-8">
+                <!-- Minimalist Calendar Widget -->
                 <div class="space-y-4 bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm">
                     <div class="flex justify-between items-center">
                         <h2 id="calendarMonthYear" class="text-xs font-semibold uppercase tracking-wider text-skydark">August 2026</h2>
@@ -88,10 +101,12 @@
                     </div>
                     
                     <div id="miniCalendarGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
-                        </div>
+                        <!-- Populated via JS -->
+                    </div>
                     <p class="text-[10px] text-sky-900/50 text-center italic pt-1">Click any date to view or jump to its logs.</p>
                 </div>
 
+                <!-- Daily Logger Form -->
                 <div class="space-y-4 bg-white/60 p-6 rounded-2xl border border-sky-100 shadow-sm">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-semibold uppercase tracking-wider text-skydark">Log Entry</h2>
@@ -101,8 +116,8 @@
                         <div>
                             <label class="block text-[11px] font-medium text-sky-900/70 mb-1">Entry Type</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <button type="button" id="typeWin" onclick="setEntryType('win')" class="py-2 rounded-xl text-xs font-medium border border-sky-200 transition bg-emerald-50 text-emerald-700 border-emerald-300">Win / Success</button>
-                                <button type="button" id="typeFault" onclick="setEntryType('fault')" class="py-2 rounded-xl text-xs font-medium border border-sky-200 transition bg-white text-sky-900/60">Fault / Slip</button>
+                                <button type="button" id="typeWin" onclick="setEntryType('win')" class="py-2 rounded-xl text-xs font-medium border transition bg-emerald-50 text-emerald-700 border-emerald-300">Win / Success</button>
+                                <button type="button" id="typeFault" onclick="setEntryType('fault')" class="py-2 rounded-xl text-xs font-medium border transition bg-white text-sky-900/60">Fault / Slip</button>
                             </div>
                         </div>
                         <div id="countContainer">
@@ -119,12 +134,14 @@
             </section>
         </div>
 
+        <!-- PROGRESS OVERVIEW VIEW -->
         <div id="viewOverview" class="space-y-8 hidden">
             <div>
                 <h2 class="text-2xl font-semibold tracking-tight text-darktext">Progress Overview</h2>
                 <p class="text-xs text-sky-900/60 mt-1">Review your wins, faults, and scoring across all 13 virtues over weeks and months.</p>
             </div>
 
+            <!-- Stats Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-white/60 p-5 rounded-2xl border border-sky-100 shadow-sm space-y-1">
                     <span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Total Wins Logged</span>
@@ -140,6 +157,7 @@
                 </div>
             </div>
 
+            <!-- Virtues Performance Breakdown Table -->
             <div class="bg-white/60 p-6 rounded-2xl border border-sky-100 shadow-sm space-y-4">
                 <h3 class="text-sm font-semibold uppercase tracking-wider text-skydark">Virtues Performance Matrix</h3>
                 <div class="overflow-x-auto">
@@ -154,7 +172,8 @@
                             </tr>
                         </thead>
                         <tbody id="overviewTableBody" class="divide-y divide-sky-50">
-                            </tbody>
+                            <!-- Populated via JS -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -162,6 +181,7 @@
 
     </main>
 
+    <!-- Master List Modal (Hidden by default) -->
     <div id="masterModal" class="fixed inset-0 bg-darktext/25 backdrop-blur-xs hidden justify-center items-center p-4 z-50">
         <div class="bg-white max-w-2xl w-full p-8 rounded-2xl border border-sky-100 shadow-xl max-h-[85vh] overflow-y-auto space-y-6">
             <div class="flex justify-between items-center border-b border-sky-100 pb-4">
@@ -172,11 +192,20 @@
                 <button onclick="closeMasterList()" class="text-xs text-sky-800 hover:text-darktext font-medium px-2 py-1">✕ Close</button>
             </div>
             <div id="virtuesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                </div>
+                <!-- Populated via JS -->
+            </div>
         </div>
     </div>
 
+    <!-- Application Script with Supabase Cloud Sync -->
     <script>
+        // Supabase Configuration Constants
+        const SUPABASE_URL = 'https://xdghalookokwfgoleqdw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZGhhbGVva29rd2Znb2xlcWR3Iiwicm9sZSI6InhxZGhhbGVva29rd2Znb2xlcWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMzcwNjksImV4cCI6MjEwMzYxMzA2OX0.DpYoL84V1PbJr-KxczrLADKHN1lnQMgoZAicN15gNZQ';
+        
+        // Initialize Supabase Client
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const virtues = [
             { 
                 name: "Temperance", 
@@ -246,7 +275,7 @@
         ];
 
         let activeVirtueIndex = parseInt(localStorage.getItem('franklin_active_index')) || 0;
-        let logs = JSON.parse(localStorage.getItem('franklin_logs')) || [];
+        let logs = []; // Loaded from Supabase
 
         // Calendar & Date State
         let todayObj = new Date();
@@ -270,7 +299,29 @@
         const virtuesGrid = document.getElementById('virtuesGrid');
         const selectedDateLabel = document.getElementById('selectedDateLabel');
 
-        // Tab switches
+        // Fetch logs from Supabase Cloud Database
+        async function fetchLogs() {
+            const { data, error } = await supabaseClient
+                .from('franklin_logs')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching logs from Supabase:', error);
+            } else {
+                // Map database columns to app variables
+                logs = (data || []).map(row => ({
+                    id: row.id,
+                    virtueIndex: row.virtue_index,
+                    dateStr: row.date_str,
+                    type: row.type,
+                    count: row.count,
+                    reflectionNotes: row.reflection_notes
+                }));
+                renderApp();
+            }
+        }
+
         window.switchTab = function(tabName) {
             const viewTracker = document.getElementById('viewTracker');
             const viewOverview = document.getElementById('viewOverview');
@@ -489,35 +540,49 @@
             masterModal.classList.add('hidden');
         }
 
-        logForm.addEventListener('submit', (e) => {
+        // Save log directly to Supabase Cloud Database
+        logForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const newLog = {
                 id: Date.now(),
-                virtueIndex: activeVirtueIndex,
-                dateStr: selectedDateString,
+                virtue_index: activeVirtueIndex,
+                date_str: selectedDateString,
                 type: currentEntryType,
                 count: parseInt(document.getElementById('entryCount').value) || 1,
-                reflectionNotes: document.getElementById('reflectionNotes').value.trim()
+                reflection_notes: document.getElementById('reflectionNotes').value.trim()
             };
 
-            logs.unshift(newLog);
-            localStorage.setItem('franklin_logs', JSON.stringify(logs));
+            const { error } = await supabaseClient
+                .from('franklin_logs')
+                .insert([newLog]);
 
-            document.getElementById('entryCount').value = '1';
-            document.getElementById('reflectionNotes').value = '';
-
-            renderApp();
+            if (error) {
+                console.error('Error saving log to Supabase:', error);
+                alert('Error saving entry. Please check your network or database connection.');
+            } else {
+                document.getElementById('entryCount').value = '1';
+                document.getElementById('reflectionNotes').value = '';
+                fetchLogs(); // Refresh logs from cloud
+            }
         });
 
-        window.deleteLog = function(id) {
-            logs = logs.filter(l => l.id !== id);
-            localStorage.setItem('franklin_logs', JSON.stringify(logs));
-            renderApp();
+        // Delete log from Supabase Cloud Database
+        window.deleteLog = async function(id) {
+            const { error } = await supabaseClient
+                .from('franklin_logs')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                console.error('Error deleting log from Supabase:', error);
+            } else {
+                fetchLogs(); // Refresh logs from cloud
+            }
         };
 
-        // Initialize view
-        renderApp();
+        // Initialize view and load cloud data
+        fetchLogs();
     </script>
 </body>
 </html>
