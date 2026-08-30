@@ -13,8 +13,8 @@
             theme: {
                 extend: {
                     colors: {
-                        skybg: '#F0F9FF', // Soft light sky blue background
-                        skydark: '#0369A1', // Deep sky blue accent
+                        skybg: '#F0F9FF',
+                        skydark: '#0369A1',
                         darktext: '#0F172A'
                     }
                 }
@@ -199,91 +199,34 @@
 
     <!-- Application Script with Supabase Cloud Sync -->
     <script>
-        // Supabase Configuration Constants
-        const SUPABASE_URL = 'https://xdghalookokwfgoleqdw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZGhhbGVva29rd2Znb2xlcWR3Iiwicm9sZSI6InhxZGhhbGVva29rd2Znb2xlcWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMzcwNjksImV4cCI6MjEwMzYxMzA2OX0.DpYoL84V1PbJr-KxczrLADKHN1lnQMgoZAicN15gNZQ';
+        const SUPABASE_URL = 'https://xqdhaleokokwfgoleqdw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxZGhhbGVva29rd2Znb2xlcWR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMzcwNjksImV4cCI6MjEwMzYxMzA2OX0.DpYoL84V1PbJr-KxczrLADKHN1lnQMgoZAicN15gNZQ';
         
-        // Initialize Supabase Client
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const virtues = [
-            { 
-                name: "Temperance", 
-                desc: "Eat not to dullness; drink not to elevation.", 
-                expansion: "Franklin noted that temperance first tended to secure coolness and clearness of head, making execution easier. For 'eat not to dullness', consider portion control, avoiding food comas, and eating for sustained mental energy rather than immediate gratification." 
-            },
-            { 
-                name: "Silence", 
-                desc: "Speak not but what may benefit others or yourself; avoid trifling conversation.", 
-                expansion: "Focus on listening more than speaking. Cut out gossip, small talk that drains energy, and unnecessary commentary. Let every word carry intentional value." 
-            },
-            { 
-                name: "Order", 
-                desc: "Let all your things have their places; let each part of your business have its time.", 
-                expansion: "Establish a daily routine or schedule. Keep your physical workspace and digital desktop organized so time isn't wasted searching for items." 
-            },
-            { 
-                name: "Resolution", 
-                desc: "Resolve to perform what you ought; perform without fail what you resolve.", 
-                expansion: "Commit fully to your daily tasks. Eliminate procrastination by breaking big intentions into concrete, non-negotiable actions." 
-            },
-            { 
-                name: "Frugality", 
-                desc: "Make no expense but to do good to others or yourself; i.e., waste nothing.", 
-                expansion: "Examine financial or resource waste. Focus on intentional spending and eliminating impulse purchases that do not add genuine value to your life." 
-            },
-            { 
-                name: "Industry", 
-                desc: "Lose no time; be always employ'd in something useful; cut off all unnecessary actions.", 
-                expansion: "Eliminate idle distractions, mindless scrolling, or tasks that lack purpose. Direct your energy completely toward productive, meaningful labor." 
-            },
-            { 
-                name: "Sincerity", 
-                desc: "Use no hurtful deceit; think innocently and justly, and, if you speak, speak accordingly.", 
-                expansion: "Be honest in your dealings, clear in your communication, and true to your word without manipulation or hidden motives." 
-            },
-            { 
-                name: "Justice", 
-                desc: "Wrong none by doing injuries, or omitting the benefits that are your duty.", 
-                expansion: "Ensure fairness in your interactions. Fulfill your obligations to colleagues, family, and community without shortcuts." 
-            },
-            { 
-                name: "Moderation", 
-                desc: "Avoid extremes; forbear resenting injuries so much as you think they deserve.", 
-                expansion: "Practice emotional balance. Step back from intense reactions, over-working, or swinging between emotional extremes." 
-            },
-            { 
-                name: "Cleanliness", 
-                desc: "Tolerate no uncleanliness in body, clothes, or habitation.", 
-                expansion: "Maintain personal hygiene, keep your living quarters tidy, and respect your physical environment as a reflection of mental clarity." 
-            },
-            { 
-                name: "Tranquility", 
-                desc: "Be not disturbed at trifles, or at accidents common or unavoidable.", 
-                expansion: "Cultivate inner peace. Let go of anxieties regarding things outside of your direct control, such as traffic, weather, or minor annoyances." 
-            },
-            { 
-                name: "Chastity", 
-                desc: "Rarely use venery but for health or offspring, never to dullness, weakness, or injury.", 
-                expansion: "Preserve your physical vitality and relational integrity with mindfulness and self-control." 
-            },
-            { 
-                name: "Humility", 
-                desc: "Imitate Jesus and Socrates.", 
-                expansion: "Practice intellectual modesty. Approach discussions with a willingness to learn rather than a need to prove yourself right." 
-            }
+            { name: "Temperance", desc: "Eat not to dullness; drink not to elevation.", expansion: "Franklin noted that temperance first tended to secure coolness and clearness of head." },
+            { name: "Silence", desc: "Speak not but what may benefit others or yourself; avoid trifling conversation.", expansion: "Focus on listening more than speaking. Cut out gossip and unnecessary commentary." },
+            { name: "Order", desc: "Let all your things have their places; let each part of your business have its time.", expansion: "Establish a daily routine or schedule to keep your workspace organized." },
+            { name: "Resolution", desc: "Resolve to perform what you ought; perform without fail what you resolve.", expansion: "Commit fully to your daily tasks and eliminate procrastination." },
+            { name: "Frugality", desc: "Make no expense but to do good to others or yourself; i.e., waste nothing.", expansion: "Examine financial or resource waste and focus on intentional usage." },
+            { name: "Industry", desc: "Lose no time; be always employ'd in something useful; cut off all unnecessary actions.", expansion: "Eliminate idle distractions and direct energy toward productive labor." },
+            { name: "Sincerity", desc: "Use no hurtful deceit; think innocently and justly, and, if you speak, speak accordingly.", expansion: "Be honest in your dealings and true to your word." },
+            { name: "Justice", desc: "Wrong none by doing injuries, or omitting the benefits that are your duty.", expansion: "Ensure fairness in your interactions and fulfill obligations." },
+            { name: "Moderation", desc: "Avoid extremes; forbear resenting injuries so much as you think they deserve.", expansion: "Practice emotional balance and step back from intense reactions." },
+            { name: "Cleanliness", desc: "Tolerate no uncleanliness in body, clothes, or habitation.", expansion: "Maintain personal hygiene and keep your living quarters tidy." },
+            { name: "Tranquility", desc: "Be not disturbed at trifles, or at accidents common or unavoidable.", expansion: "Cultivate inner peace and let go of uncontrollable anxieties." },
+            { name: "Chastity", desc: "Rarely use venery but for health or offspring, never to dullness, weakness, or injury.", expansion: "Preserve physical vitality and relational integrity with self-control." },
+            { name: "Humility", desc: "Imitate Jesus and Socrates.", expansion: "Practice intellectual modesty and approach discussions with a willingness to learn." }
         ];
 
         let activeVirtueIndex = parseInt(localStorage.getItem('franklin_active_index')) || 0;
-        let logs = []; // Loaded from Supabase
+        let logs = [];
 
-        // Calendar & Date State
         let todayObj = new Date();
         let currentMonth = todayObj.getMonth();
         let currentYear = todayObj.getFullYear();
         let selectedDateString = new Date().toISOString().split('T')[0];
-
-        // Logger Type State ('win' or 'fault')
         let currentEntryType = 'win';
 
         const activeVirtueTitle = document.getElementById('activeVirtueTitle');
@@ -299,7 +242,6 @@
         const virtuesGrid = document.getElementById('virtuesGrid');
         const selectedDateLabel = document.getElementById('selectedDateLabel');
 
-        // Fetch logs from Supabase Cloud Database
         async function fetchLogs() {
             const { data, error } = await supabaseClient
                 .from('franklin_logs')
@@ -309,7 +251,6 @@
             if (error) {
                 console.error('Error fetching logs from Supabase:', error);
             } else {
-                // Map database columns to app variables
                 logs = (data || []).map(row => ({
                     id: row.id,
                     virtueIndex: row.virtue_index,
@@ -364,7 +305,6 @@
             activeVirtuePrecept.textContent = `"${currentVirtue.desc}"`;
             activeVirtueExpansion.innerHTML = `<p>${currentVirtue.expansion}</p>`;
 
-            // Render Master List Modal
             virtuesGrid.innerHTML = '';
             virtues.forEach((v, index) => {
                 const isSelected = index === activeVirtueIndex;
@@ -387,7 +327,6 @@
                 virtuesGrid.appendChild(card);
             });
 
-            // Render weekly logs for current virtue
             const currentVirtueLogs = logs.filter(l => l.virtueIndex === activeVirtueIndex);
             logsContainer.innerHTML = '';
 
@@ -540,7 +479,6 @@
             masterModal.classList.add('hidden');
         }
 
-        // Save log directly to Supabase Cloud Database
         logForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -563,11 +501,10 @@
             } else {
                 document.getElementById('entryCount').value = '1';
                 document.getElementById('reflectionNotes').value = '';
-                fetchLogs(); // Refresh logs from cloud
+                fetchLogs();
             }
         });
 
-        // Delete log from Supabase Cloud Database
         window.deleteLog = async function(id) {
             const { error } = await supabaseClient
                 .from('franklin_logs')
@@ -577,11 +514,10 @@
             if (error) {
                 console.error('Error deleting log from Supabase:', error);
             } else {
-                fetchLogs(); // Refresh logs from cloud
+                fetchLogs();
             }
         };
 
-        // Initialize view and load cloud data
         fetchLogs();
     </script>
 </body>
