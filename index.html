@@ -205,19 +205,71 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const virtues = [
-            { name: "Temperance", desc: "Eat not to dullness; drink not to elevation.", expansion: "Franklin noted that temperance first tended to secure coolness and clearness of head." },
-            { name: "Silence", desc: "Speak not but what may benefit others or yourself; avoid trifling conversation.", expansion: "Focus on listening more than speaking. Cut out gossip and unnecessary commentary." },
-            { name: "Order", desc: "Let all your things have their places; let each part of your business have its time.", expansion: "Establish a daily routine or schedule to keep your workspace organized." },
-            { name: "Resolution", desc: "Resolve to perform what you ought; perform without fail what you resolve.", expansion: "Commit fully to your daily tasks and eliminate procrastination." },
-            { name: "Frugality", desc: "Make no expense but to do good to others or yourself; i.e., waste nothing.", expansion: "Examine financial or resource waste and focus on intentional usage." },
-            { name: "Industry", desc: "Lose no time; be always employ'd in something useful; cut off all unnecessary actions.", expansion: "Eliminate idle distractions and direct energy toward productive labor." },
-            { name: "Sincerity", desc: "Use no hurtful deceit; think innocently and justly, and, if you speak, speak accordingly.", expansion: "Be honest in your dealings and true to your word." },
-            { name: "Justice", desc: "Wrong none by doing injuries, or omitting the benefits that are your duty.", expansion: "Ensure fairness in your interactions and fulfill obligations." },
-            { name: "Moderation", desc: "Avoid extremes; forbear resenting injuries so much as you think they deserve.", expansion: "Practice emotional balance and step back from intense reactions." },
-            { name: "Cleanliness", desc: "Tolerate no uncleanliness in body, clothes, or habitation.", expansion: "Maintain personal hygiene and keep your living quarters tidy." },
-            { name: "Tranquility", desc: "Be not disturbed at trifles, or at accidents common or unavoidable.", expansion: "Cultivate inner peace and let go of uncontrollable anxieties." },
-            { name: "Chastity", desc: "Rarely use venery but for health or offspring, never to dullness, weakness, or injury.", expansion: "Preserve physical vitality and relational integrity with self-control." },
-            { name: "Humility", desc: "Imitate Jesus and Socrates.", expansion: "Practice intellectual modesty and approach discussions with a willingness to learn." }
+            { 
+                name: "Temperance", 
+                desc: "Eat not to dullness; drink not to elevation.", 
+                expansion: "Franklin noted that temperance first tended to secure coolness and clearness of head, making execution easier. For 'eat not to dullness', consider portion control, avoiding food comas, and eating for sustained mental energy rather than immediate gratification." 
+            },
+            { 
+                name: "Silence", 
+                desc: "Speak not but what may benefit others or yourself; avoid trifling conversation.", 
+                expansion: "Focus on listening more than speaking. Cut out gossip, small talk, and unnecessary commentary. Speak with purpose and value when you choose to contribute." 
+            },
+            { 
+                name: "Order", 
+                desc: "Let all your things have their places; let each part of your business have its time.", 
+                expansion: "Establish clear routines and organization in your physical workspace and digital life. A structured environment minimizes mental friction and wasted time." 
+            },
+            { 
+                name: "Resolution", 
+                desc: "Resolve to perform what you ought; perform without fail what you resolve.", 
+                expansion: "Commit fully to your daily tasks and eliminate procrastination. When you make a decision or set a plan, follow through with disciplined action." 
+            },
+            { 
+                name: "Frugality", 
+                desc: "Make no expense but to do good to others or yourself; i.e., waste nothing.", 
+                expansion: "Examine financial, material, or resource waste. Focus on intentional, high-value usage rather than impulsive consumption." 
+            },
+            { 
+                name: "Industry", 
+                desc: "Lose no time; be always employ'd in something useful; cut off all unnecessary actions.", 
+                expansion: "Eliminate idle distractions and direct your energy toward productive, meaningful labor. Keep momentum going throughout the day." 
+            },
+            { 
+                name: "Sincerity", 
+                desc: "Use no hurtful deceit; think innocently and justly, and, if you speak, speak accordingly.", 
+                expansion: "Be honest in your dealings and true to your word. Cultivate transparency and integrity in your communication with others." 
+            },
+            { 
+                name: "Justice", 
+                desc: "Wrong none by doing injuries, or omitting the benefits that are your duty.", 
+                expansion: "Ensure fairness in your interactions and actively fulfill your obligations to those around you." 
+            },
+            { 
+                name: "Moderation", 
+                desc: "Avoid extremes; forbear resenting injuries so much as you think they deserve.", 
+                expansion: "Practice emotional balance and step back from intense, knee-jerk reactions. Seek the middle path in conflicts and habits." 
+            },
+            { 
+                name: "Cleanliness", 
+                desc: "Tolerate no uncleanliness in body, clothes, or habitation.", 
+                expansion: "Maintain personal hygiene, neat attire, and a tidy living space to support a clear and calm state of mind." 
+            },
+            { 
+                name: "Tranquility", 
+                desc: "Be not disturbed at trifles, or at accidents common or unavoidable.", 
+                expansion: "Cultivate inner peace and let go of uncontrollable anxieties. Do not let minor inconveniences derail your focus or mood." 
+            },
+            { 
+                name: "Chastity", 
+                desc: "Rarely use venery but for health or offspring, never to dullness, weakness, or injury.", 
+                expansion: "Preserve physical vitality and relational integrity with high standards of self-control." 
+            },
+            { 
+                name: "Humility", 
+                desc: "Imitate Jesus and Socrates.", 
+                expansion: "Practice intellectual modesty. Approach discussions and learning with an open mind, recognizing how much there is yet to understand." 
+            }
         ];
 
         let activeVirtueIndex = parseInt(localStorage.getItem('franklin_active_index')) || 0;
